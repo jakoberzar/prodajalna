@@ -208,17 +208,15 @@ streznik.post('/prijava', function(zahteva, odgovor) {
     	  Address, City, State, Country, PostalCode, \
     	  Phone, Fax, Email, SupportRepId) \
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
-      //TODO: add fields and finalize
       stmt.run(polja.FirstName, polja.LastName, polja.Company, polja.Address, polja.City, polja.State, polja.Country, polja.PostalCode, polja.Phone, polja.Fax, polja.Email, 3); 
       stmt.finalize();
     } catch (err) {
       napaka2 = true;
     }
     zahteva.session.sporocilo = !(napaka1 || napaka2) ? 
-        "Stranka je bila uspešno registrirana!" : 
-        "Prišlo je do napake pri registraciji nove stranke. Prosim preverite vnešene podatke in poskusite znova!";
+        "Stranka je bila uspešno registrirana." : 
+        "Prišlo je do napake pri registraciji nove stranke. Prosim preverite vnešene podatke in poskusite znova.";
     odgovor.redirect("/prijava");
-    //odgovor.end();
   });
 })
 
