@@ -133,7 +133,14 @@ var pesmiIzRacuna = function(racunId, callback) {
     Track.TrackId IN (SELECT InvoiceLine.TrackId FROM InvoiceLine, Invoice \
     WHERE InvoiceLine.InvoiceId = Invoice.InvoiceId AND Invoice.InvoiceId = " + racunId + ")",
     function(napaka, vrstice) {
-      callback(napaka, vrstice);
+      if (napaka) {
+        callback(false);
+      } else {
+        for (var i=0; i<vrstice.length; i++) {
+          vrstice[i].stopnja = davcnaStopnja((vrstice[i].opisArtikla.split(' (')[1]).split(')')[0], vrstice[i].zanr);
+        }
+        callback(vrstice);
+      }
     })
 }
 
@@ -151,7 +158,7 @@ streznik.post('/izpisiRacunBaza', function(zahteva, odgovor) {
   var form = new formidable.IncomingForm();
   form.parse(zahteva, function (napaka1, polja, datoteke) {
     strankaIzRacuna(polja.seznamRacunov, function(napaka2, stranka) {
-      pesmiIzRacuna(polja.seznamRacunov, function(napaka3, pesmi) {
+      pesmiIzRacuna(polja.seznamRacunov, function(pesmi) {
         odgovor.setHeader('content-type', 'text/xml');
         odgovor.render('eslog', {
           vizualiziraj: true,
